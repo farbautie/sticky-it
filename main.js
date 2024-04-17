@@ -1,6 +1,7 @@
 class DraggableElement {
-    constructor(element) {
+    constructor(element, cardData) {
         this.element = element
+        this.cardData = cardData
         this.startY = 0
         this.startX = 0
         this.newCoordinateX = 0
@@ -56,10 +57,12 @@ class DraggableElement {
 
     onMouseUp() {
         this.endDrag()
+        this.updateCardPositionInLocalStorage()
     }
 
     onTouchEnd() {
         this.endDrag()
+        this.updateCardPositionInLocalStorage()
     }
 
     endDrag() {
@@ -84,6 +87,20 @@ class DraggableElement {
     stopPropagation(event) {
         event.stopPropagation()
     }
+
+    updateCardPositionInLocalStorage() {
+        this.cardData.position.x = parseInt(this.element.style.left)
+        this.cardData.position.y = parseInt(this.element.style.top)
+        const existingCards = JSON.parse(localStorage.getItem('cards')) || []
+        const updatedCards = existingCards.map((card) => {
+            if (card.id === this.cardData.id) {
+                return this.cardData
+            } else {
+                return card
+            }
+        })
+        localStorage.setItem('cards', JSON.stringify(updatedCards))
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -107,14 +124,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardElements = document.querySelectorAll('.card')
         const card = cardElements[cardElements.length - 1]
 
-        new DraggableElement(card)
+        new DraggableElement(card, cardData)
+
+        const cardTextArea = card.querySelector('textarea')
+        cardTextArea.addEventListener('input', function () {
+            cardData.body = this.value
+            updateCardInLocalStorage(cardData)
+        })
+
+        saveCardToLocalStorage(cardData)
     })
+
+    loadCardsFromLocalStorage()
 })
 
 function addCard(cardData) {
     const container = document.querySelector('.container')
 
-    const cardTemplate = `<div class="card" style="left:${cardData.position.x}px; top:${cardData.position.y}px" data-id=${cardData.id}>
+    const cardTemplate = `<div class="card" style="left:${cardData.position.x}px;top:${cardData.position.y}px" data-id=${cardData.id}>
         <div class="card-header" style="background-color:${cardData.colors.colorHeader};z-index="998"; data-id=${cardData.$id}">
             <svg id="delete-${cardData.id}" data-id=${cardData.id} class="delete" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" stroke="#000000" fill="none" stroke-width="1.5"><path d="m6 8 .668 8.681c.148 1.924.222 2.885.84 3.423.068.06.14.115.217.165.685.449 1.63.26 3.522-.118.36-.072.54-.108.721-.111h.064c.182.003.361.039.72.11 1.892.379 2.838.568 3.523.12.076-.05.15-.106.218-.166.617-.538.691-1.5.84-3.423L18 8"></path><path stroke-linecap="round" d="m10.151 12.5.245 3.492M13.849 12.5l-.245 3.492M4 8s4.851 1 8 1 8-1 8-1M8 5l.447-.894A2 2 0 0 1 10.237 3h3.527a2 2 0 0 1 1.789 1.106L16 5"></path></svg>
         </div>
@@ -131,14 +158,60 @@ function addCard(cardData) {
     const cardTextArea = container.querySelector(
         `.card[data-id="${cardData.id}"] textarea`
     )
-    cardTextArea.addEventListener('input', autoGrow)
+    cardTextArea.addEventListener('input', function () {
+        cardData.body = this.value
+        updateCardInLocalStorage(cardData)
+        autoGrow.call(cardTextArea)
+    })
 }
 
 async function handleDelete() {
     this.parentElement.parentElement.remove()
+    const cardId = this.getAttribute('data-id')
+    removeCardFromLocalStorage(cardId)
 }
 
 function autoGrow() {
     this.style.height = 'auto' // Reset the height
     this.style.height = this.scrollHeight + 'px' // Set the new height
+}
+
+function saveCardToLocalStorage(cardData) {
+    const existingCards = JSON.parse(localStorage.getItem('cards')) || []
+    existingCards.push(cardData)
+
+    localStorage.setItem('cards', JSON.stringify(existingCards))
+}
+
+function loadCardsFromLocalStorage() {
+    const existingCards = JSON.parse(localStorage.getItem('cards')) || []
+    existingCards.forEach((cardData) => {
+        addCard(cardData)
+        const cardElement = document.querySelector(
+            `.card[data-id="${cardData.id}"]`
+        )
+        new DraggableElement(cardElement, cardData)
+        const cardTextArea = cardElement.querySelector('textarea')
+        autoGrow.call(cardTextArea)
+    })
+}
+
+function removeCardFromLocalStorage(cardId) {
+    const existingCards = JSON.parse(localStorage.getItem('cards')) || []
+    const updatedCards = existingCards.filter((card) => card.id !== cardId)
+
+    localStorage.setItem('cards', JSON.stringify(updatedCards))
+}
+
+function updateCardInLocalStorage(updatedCardData) {
+    const existingCards = JSON.parse(localStorage.getItem('cards')) || []
+    const updatedCards = existingCards.map((card) => {
+        if (card.id === updatedCardData.id) {
+            return updatedCardData
+        } else {
+            return card
+        }
+    })
+
+    localStorage.setItem('cards', JSON.stringify(updatedCards))
 }

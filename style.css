@@ -4,10 +4,10 @@ body {
 }
 
 .container {
-    background-color: #181a24;
+    background-color: #1c1c1f;
     background-image: linear-gradient(#292a30 0.1em, transparent 0.1em),
         linear-gradient(90deg, #292a30 0.1em, transparent 0.1em);
-    background-size: 4em 4em;
+    background-size: 2em 2em;
     height: 100vh;
     position: relative;
     overflow: auto;
@@ -59,25 +59,70 @@ textarea:focus {
     height: 100%;
 }
 
-#add-card {
+.controls {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1em;
     align-items: center;
-    background-color: rgb(107, 103, 103);
-    font-size: 36px;
-    font-weight: bold;
     position: fixed;
-    bottom: 30px;
-    right: 50px;
-    height: 60px;
-    width: 60px;
-    border-radius: 50%;
+    left: 55px;
+    top: 20px;
+    transform: translateX(-50%);
+    background-color: #38383f;
+    padding: 1em;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+        0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+        0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
+    z-index: 999;
+}
+
+#add-card {
+    background-color: rgba(107, 107, 107, 1);
+    font-size: 36px;
+    display: block;
+    height: 40px;
+    width: 40px;
+    border-radius: 20%;
     border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 0;
+    line-height: 0;
+    padding: 0;
+}
+
+#add-card:hover {
+    height: 45px;
+    width: 45px;
+}
+
+.color {
+    background-color: #9bd1de;
+    height: 40px;
+    width: 40px;
+    border-radius: 20%;
     cursor: pointer;
     transition: 0.3s;
 }
 
-#add-card:hover {
-    height: 65px;
-    width: 65px;
+.color:hover {
+    height: 45px;
+    width: 45px;
+}
+
+#yellow {
+    background-color: #facb3e;
+}
+
+#green {
+    background-color: #68c446;
+}
+
+#purple {
+    background-color: #eb10e7;
+}
+
+#white {
+    background-color: #ffffff;
 }

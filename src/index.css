@@ -32,11 +32,6 @@ body {
     align-items: center;
 }
 
-.delete {
-    height: 20px;
-    /* z-index: 1001; */
-}
-
 .card-body {
     padding: 1em;
     background-color: #a6dce9;

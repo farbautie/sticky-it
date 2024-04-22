@@ -49,6 +49,12 @@ export default function Card() {
         document.removeEventListener('mouseup', handleMouseUp)
     }
 
+    function handleDelte(): void {
+        if (cardRef.current) {
+            cardRef.current.remove()
+        }
+    }
+
     return (
         <div
             className="card"
@@ -62,7 +68,10 @@ export default function Card() {
                 <svg
                     id={''}
                     data-id={''}
-                    className="delete"
+                    onClick={handleDelte}
+                    style={{
+                        height: '20px',
+                    }}
                     viewBox="0 0 24 24"
                     width="48"
                     height="48"

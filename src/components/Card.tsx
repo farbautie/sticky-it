@@ -2,10 +2,12 @@ import React, { useRef } from 'react'
 
 export default function Card() {
     const cardRef = useRef<HTMLDivElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
     const isDraggingRef = useRef<boolean>(false)
     const offsetRef = useRef<{ offsetX: number; offsetY: number } | null>(null)
 
     function handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+        if (event.button !== 0 || !cardRef.current) return
         if (cardRef.current) {
             const rect = cardRef.current.getBoundingClientRect()
             offsetRef.current = {
@@ -19,27 +21,27 @@ export default function Card() {
     }
 
     function handleMouseMove(event: MouseEvent) {
-        if (isDraggingRef.current && cardRef.current && offsetRef.current) {
-            const newLeft = event.clientX - offsetRef.current.offsetX
-            const newTop = event.clientY - offsetRef.current.offsetY
+        if (!isDraggingRef.current || !cardRef.current || !offsetRef.current)
+            return
+        const newLeft = event.clientX - offsetRef.current.offsetX
+        const newTop = event.clientY - offsetRef.current.offsetY
 
-            const { clientWidth, clientHeight } = document.documentElement
-            const cardWidth = cardRef.current.clientWidth
-            const cardHeight = cardRef.current.clientHeight
-            // Limiting movement within the window boundaries
+        const { clientWidth, clientHeight } = document.documentElement
+        const cardWidth = cardRef.current.clientWidth
+        const cardHeight = cardRef.current.clientHeight
+        // Limiting movement within the window boundaries
 
-            const boundedLeft = Math.min(
-                Math.max(newLeft, 0),
-                clientWidth - cardWidth
-            )
-            const boundedTop = Math.min(
-                Math.max(newTop, 0),
-                clientHeight - cardHeight
-            )
+        const boundedLeft = Math.min(
+            Math.max(newLeft, 0),
+            clientWidth - cardWidth
+        )
+        const boundedTop = Math.min(
+            Math.max(newTop, 0),
+            clientHeight - cardHeight
+        )
 
-            cardRef.current.style.left = `${boundedLeft}px`
-            cardRef.current.style.top = `${boundedTop}px`
-        }
+        cardRef.current.style.left = `${boundedLeft}px`
+        cardRef.current.style.top = `${boundedTop}px`
     }
 
     function handleMouseUp() {
@@ -52,6 +54,14 @@ export default function Card() {
     function handleDelete() {
         if (cardRef.current) {
             cardRef.current.remove()
+        }
+    }
+
+    function handleTextareaInput() {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto'
+            textareaRef.current.style.height =
+                textareaRef.current.scrollHeight + 'px'
         }
     }
 
@@ -88,9 +98,11 @@ export default function Card() {
             </div>
             <div className="card-body">
                 <textarea
+                    ref={textareaRef}
+                    onInput={handleTextareaInput}
                     onMouseDown={(e) => e.stopPropagation()}
                     onMouseUp={(e) => e.stopPropagation()}
-                ></textarea>
+                />
             </div>
         </div>
     )

@@ -22,8 +22,23 @@ export default function Card() {
         if (isDraggingRef.current && cardRef.current && offsetRef.current) {
             const newLeft = event.clientX - offsetRef.current.offsetX
             const newTop = event.clientY - offsetRef.current.offsetY
-            cardRef.current.style.left = `${newLeft}px`
-            cardRef.current.style.top = `${newTop}px`
+
+            const { clientWidth, clientHeight } = document.documentElement
+            const cardWidth = cardRef.current.clientWidth
+            const cardHeight = cardRef.current.clientHeight
+            // Limiting movement within the window boundaries
+
+            const boundedLeft = Math.min(
+                Math.max(newLeft, 0),
+                clientWidth - cardWidth
+            )
+            const boundedTop = Math.min(
+                Math.max(newTop, 0),
+                clientHeight - cardHeight
+            )
+
+            cardRef.current.style.left = `${boundedLeft}px`
+            cardRef.current.style.top = `${boundedTop}px`
         }
     }
 

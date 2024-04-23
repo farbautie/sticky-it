@@ -1,7 +1,16 @@
-interface Props {
-    children: React.ReactElement | React.ReactElement[]
-}
+import { useContext } from 'react'
 
-export default function Container({ children }: Props) {
-    return <div className="container">{children}</div>
+import CardContext from '@/context/CardContext'
+import Card from '@/components/Card'
+
+export default function Container() {
+    const { cards } = useContext(CardContext)
+
+    return (
+        <div className="container">
+            {cards.map((card) => {
+                return <Card key={card.id} {...card} />
+            })}
+        </div>
+    )
 }

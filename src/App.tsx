@@ -1,12 +1,12 @@
 import Container from '@/components/Container'
 import Controls from '@/components/Controls'
-import Card from '@/components/Card'
+import { CardProvider } from '@/context/CardContext'
 
 export default function App() {
     return (
-        <Container>
-            <Card />
+        <CardProvider>
+            <Container />
             <Controls />
-        </Container>
+        </CardProvider>
     )
 }

@@ -1,6 +1,8 @@
 import React, { useRef } from 'react'
 
-export default function Card() {
+import { CardData } from '@/context/CardContext'
+
+export default function Card({ colors, position }: CardData) {
     const cardRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const isDraggingRef = useRef<boolean>(false)
@@ -69,15 +71,17 @@ export default function Card() {
         <div
             className="card"
             style={{
-                position: 'absolute',
+                left: position.x + 'px',
+                top: position.y + 'px',
             }}
             ref={cardRef}
             onMouseDown={handleMouseDown}
         >
-            <div className="card-header">
+            <div
+                className="card-header"
+                style={{ backgroundColor: colors.header }}
+            >
                 <svg
-                    id={''}
-                    data-id={''}
                     onClick={handleDelete}
                     style={{
                         height: '20px',
@@ -96,8 +100,16 @@ export default function Card() {
                     ></path>
                 </svg>
             </div>
-            <div className="card-body">
+            <div
+                className="card-body"
+                style={{
+                    backgroundColor: colors.body,
+                }}
+            >
                 <textarea
+                    style={{
+                        color: colors.text,
+                    }}
                     ref={textareaRef}
                     onInput={handleTextareaInput}
                     onMouseDown={(e) => e.stopPropagation()}

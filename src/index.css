@@ -74,6 +74,7 @@ textarea:focus {
     height: 30px;
     width: 30px;
     border-radius: 20%;
+    border: none;
     cursor: pointer;
     transition: 0.3s;
 }

@@ -7,7 +7,7 @@ body {
     background-color: #1c1c1f;
     background-image: linear-gradient(#292a30 0.1em, transparent 0.1em),
         linear-gradient(90deg, #292a30 0.1em, transparent 0.1em);
-    background-size: 2em 2em;
+    background-size: 3em 3em;
     height: 100vh;
     position: relative;
     overflow: auto;
@@ -52,4 +52,33 @@ textarea:focus {
     outline: none;
     width: 100%;
     height: 100%;
+}
+
+.controls {
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1em;
+    padding: 1em;
+    align-items: center;
+    justify-content: center;
+    background-color: #38383f;
+    border-radius: 0.6em;
+    z-index: 1;
+}
+
+.color {
+    background-color: #9bd1de;
+    height: 30px;
+    width: 30px;
+    border-radius: 20%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.color:hover {
+    height: 35px;
+    width: 35px;
 }

@@ -17,6 +17,8 @@ export default function Card({ colors, position }: CardData) {
                 offsetY: event.clientY - rect.top,
             }
             isDraggingRef.current = true
+            cardRef.current.parentNode?.appendChild(cardRef.current)
+
             document.addEventListener('mousemove', handleMouseMove)
             document.addEventListener('mouseup', handleMouseUp)
         }

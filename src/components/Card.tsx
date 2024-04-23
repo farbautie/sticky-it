@@ -1,8 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 
-import { CardData } from '@/context/CardContext'
+import CardContext, { CardData } from '@/context/CardContext'
 
-export default function Card({ colors, position }: CardData) {
+export default function Card({ id, colors, position }: CardData) {
+    const { onDeleteCard } = useContext(CardContext)
+
     const cardRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const isDraggingRef = useRef<boolean>(false)
@@ -17,7 +19,6 @@ export default function Card({ colors, position }: CardData) {
                 offsetY: event.clientY - rect.top,
             }
             isDraggingRef.current = true
-            cardRef.current.parentNode?.appendChild(cardRef.current)
 
             document.addEventListener('mousemove', handleMouseMove)
             document.addEventListener('mouseup', handleMouseUp)
@@ -33,7 +34,6 @@ export default function Card({ colors, position }: CardData) {
         const { clientWidth, clientHeight } = document.documentElement
         const cardWidth = cardRef.current.clientWidth
         const cardHeight = cardRef.current.clientHeight
-        // Limiting movement within the window boundaries
 
         const boundedLeft = Math.min(
             Math.max(newLeft, 0),
@@ -43,7 +43,6 @@ export default function Card({ colors, position }: CardData) {
             Math.max(newTop, 0),
             clientHeight - cardHeight
         )
-
         cardRef.current.style.left = `${boundedLeft}px`
         cardRef.current.style.top = `${boundedTop}px`
     }
@@ -53,12 +52,6 @@ export default function Card({ colors, position }: CardData) {
         offsetRef.current = null
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
-    }
-
-    function handleDelete() {
-        if (cardRef.current) {
-            cardRef.current.remove()
-        }
     }
 
     function handleTextareaInput() {
@@ -84,7 +77,7 @@ export default function Card({ colors, position }: CardData) {
                 style={{ backgroundColor: colors.header }}
             >
                 <svg
-                    onClick={handleDelete}
+                    onClick={() => onDeleteCard(id)}
                     style={{
                         height: '20px',
                     }}

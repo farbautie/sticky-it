@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
 
 export interface CardData {
     id: string
@@ -16,14 +16,17 @@ export interface CardData {
 
 const CardContext = createContext<{
     cards: CardData[]
-    addCard: (cardData: CardData) => void
+    createNewCard: (cardData: CardData) => void
     onDeleteCard: (cardId: string) => void
+    onUpdateCard: (cardData: Partial<CardData>) => void
 }>({
     cards: [],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    addCard: (_cardData: CardData) => {},
+    createNewCard: (_cardData: CardData) => {},
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onDeleteCard: (_cardId: string) => {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onUpdateCard: (_cardData: Partial<CardData>) => {},
 })
 
 export const CardProvider = ({
@@ -33,17 +36,46 @@ export const CardProvider = ({
 }) => {
     const [cards, setCards] = useState<CardData[]>([])
 
-    const addCard = (cardData: CardData) => {
-        setCards([...cards, cardData])
+    useEffect(() => {
+        const existingCardsString = localStorage.getItem('cards')
+        if (existingCardsString) {
+            const existingCards = JSON.parse(existingCardsString)
+            setCards(existingCards)
+        }
+    }, [])
+
+    const createNewCard = (cardData: CardData) => {
+        const updatedCards = [...cards, cardData]
+        setCards(updatedCards)
+        localStorage.setItem('cards', JSON.stringify(updatedCards))
     }
 
     const onDeleteCard = (cardId: string) => {
-        const updateCards = cards.filter((card) => card.id !== cardId)
-        setCards(updateCards)
+        const updatedCards = cards.filter((card) => card.id !== cardId)
+        setCards(updatedCards)
+        localStorage.setItem('cards', JSON.stringify(updatedCards))
+    }
+    // actualiza estados por separados, la posicion en otra funcion y el body igual
+
+    const onUpdateCard = (cardData: Partial<CardData>) => {
+        const updatedCards = cards.map((card) => {
+            if (card.id === cardData.id) {
+                return cardData
+            }
+            return card
+        })
+        localStorage.setItem('cards', JSON.stringify(updatedCards))
     }
 
     return (
-        <CardContext.Provider value={{ cards, addCard, onDeleteCard }}>
+        <CardContext.Provider
+            value={{
+                cards,
+                createNewCard,
+                onDeleteCard,
+                onUpdateCard,
+            }}
+        >
             {children}
         </CardContext.Provider>
     )

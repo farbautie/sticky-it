@@ -1,9 +1,21 @@
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useRef, useState, useLayoutEffect } from 'react'
 
 import CardContext, { CardData } from '@/context/CardContext'
 
 export default function Card({ id, colors, position }: CardData) {
-    const { onDeleteCard } = useContext(CardContext)
+    const { cards, onDeleteCard, onUpdateCard } = useContext(CardContext)
+
+    const [textValue, setTextValue] = useState<string>('')
+    const [currentCard, setCurrentCard] = useState<CardData>()
+
+    useLayoutEffect(() => {
+        const currentCard = cards.find((card) => card.id === id)
+        if (currentCard) {
+            setTextValue(currentCard.body)
+            setCurrentCard(currentCard)
+            setTimeout(handleTextareaInput, 0)
+        }
+    }, [cards, id])
 
     const cardRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -48,8 +60,17 @@ export default function Card({ id, colors, position }: CardData) {
     }
 
     function handleMouseUp() {
+        if (!isDraggingRef.current || !cardRef.current || !offsetRef.current)
+            return
         isDraggingRef.current = false
         offsetRef.current = null
+        onUpdateCard({
+            ...currentCard,
+            position: {
+                x: parseInt(cardRef.current.style.left),
+                y: parseInt(cardRef.current.style.top),
+            },
+        })
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
     }
@@ -60,6 +81,14 @@ export default function Card({ id, colors, position }: CardData) {
             textareaRef.current.style.height =
                 textareaRef.current.scrollHeight + 'px'
         }
+    }
+
+    function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        setTextValue(event.target.value)
+        onUpdateCard({
+            ...currentCard,
+            body: textValue,
+        })
     }
 
     return (
@@ -107,6 +136,8 @@ export default function Card({ id, colors, position }: CardData) {
                     }}
                     ref={textareaRef}
                     onInput={handleTextareaInput}
+                    onChange={handleChange}
+                    value={textValue}
                     onMouseDown={(e) => e.stopPropagation()}
                     onMouseUp={(e) => e.stopPropagation()}
                 />

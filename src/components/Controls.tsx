@@ -1,10 +1,11 @@
 import { useContext } from 'react'
+import { nanoid } from 'nanoid'
 
 import CardContext from '@/context/CardContext'
 import { colors } from '@/colors'
 
 export default function Controls() {
-    const { addCard } = useContext(CardContext)
+    const { createNewCard } = useContext(CardContext)
 
     return (
         <div className="controls">
@@ -19,8 +20,8 @@ export default function Controls() {
                             backgroundColor: color.header,
                         }}
                         onClick={() =>
-                            addCard({
-                                id: Math.round(Math.random() * 1000).toString(),
+                            createNewCard({
+                                id: nanoid(),
                                 body: '',
                                 position: {
                                     x: 10,

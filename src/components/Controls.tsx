@@ -1,25 +1,23 @@
 import { useContext } from 'react'
 import { nanoid } from 'nanoid'
 
-import CardContext from '@/context/CardContext'
+import { CardContext } from '@/context/CardContext'
 import { colors } from '@/colors'
+import { cn } from '@/utils/cn'
 
-export default function Controls() {
+export const Controls = () => {
     const { createNewCard } = useContext(CardContext)
 
     return (
-        <div className="controls">
-            {colors.map((color) => {
-                return (
+        <>
+            <div className="bottom-4 left-1/2 z-10 absolute flex justify-center items-center gap-4 bg-[#21212b] p-4 rounded-xl -translate-x-1/2">
+                {colors.map((color) => (
                     <button
-                        type="button"
-                        className="color"
                         key={color.id}
-                        id={color.id}
-                        style={{
-                            backgroundColor: color.header,
-                        }}
-                        onClick={() =>
+                        className={`${cn(
+                            color.button
+                        )} border-none rounded-md w-8 hover:w-9 h-8 hover:h-9 transition-all cursor-pointer`}
+                        onClick={() => {
                             createNewCard({
                                 id: nanoid(),
                                 body: '',
@@ -33,10 +31,10 @@ export default function Controls() {
                                     text: color.text,
                                 },
                             })
-                        }
+                        }}
                     ></button>
-                )
-            })}
-        </div>
+                ))}
+            </div>
+        </>
     )
 }

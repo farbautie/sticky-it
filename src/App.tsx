@@ -1,11 +1,11 @@
-import Container from '@/components/Container'
-import Controls from '@/components/Controls'
+import { Board } from '@/components/Board'
+import { Controls } from '@/components/Controls'
 import { CardProvider } from '@/context/CardContext'
 
 export default function App() {
     return (
         <CardProvider>
-            <Container />
+            <Board />
             <Controls />
         </CardProvider>
     )

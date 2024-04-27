@@ -1,21 +1,43 @@
-import { useContext, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-import { CardContext, CardData } from '@/context/CardContext'
+import { useCardStorage } from '@/hooks/useCardStorage'
+import { CardData } from '@/context/CardContext'
 import { cn } from '@/utils/cn'
 
 export default function Card({ id, colors, position }: CardData) {
-    const { onDeleteCard } = useContext(CardContext)
-
+    const [textValue, setTextValue] = useState<string>('')
+    const { cards, removeFromLocalStorage, updateInLocalStorage } =
+        useCardStorage('cards')
     const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const [currentCard, setCurrentCard] = useState<CardData>()
 
-    const onTextareaChange = () => {
+    useEffect(() => {
+        const currentCard = cards.find((card) => card.id === id)
+        if (currentCard) {
+            setTextValue(currentCard.body)
+            setCurrentCard(currentCard)
+            setTimeout(onTextareaInput, 0)
+        }
+    }, [cards, id])
+
+    const onTextareaChange = (
+        event: React.ChangeEvent<HTMLTextAreaElement>
+    ) => {
+        const newTextValue = event.target.value
+        setTextValue(newTextValue)
+        updateInLocalStorage({
+            ...currentCard,
+            body: newTextValue,
+        })
+    }
+
+    const onTextareaInput = () => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto'
             textareaRef.current.style.height =
                 textareaRef.current.scrollHeight + 'px'
         }
     }
-
     return (
         <div
             className="absolute w-72 cursor-pointer"
@@ -31,7 +53,7 @@ export default function Card({ id, colors, position }: CardData) {
                     )} flex justify-end py-1 rounded-t-md w-full`}
                 >
                     <svg
-                        onClick={() => onDeleteCard(id)}
+                        onClick={() => removeFromLocalStorage(id)}
                         style={{
                             height: '20px',
                         }}
@@ -55,6 +77,8 @@ export default function Card({ id, colors, position }: CardData) {
                             colors.text
                         )} bg-inherit focus:bg-inherit px-2 py-2 border-none w-full focus:w-full h-full focus:h-full text-base resize-none focus:outline-none`}
                         ref={textareaRef}
+                        value={textValue}
+                        onInput={onTextareaInput}
                         onChange={onTextareaChange}
                     />
                 </div>

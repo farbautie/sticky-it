@@ -1,12 +1,10 @@
-import { useContext } from 'react'
-import { nanoid } from 'nanoid'
-
-import { CardContext } from '@/context/CardContext'
+import { useCardStorage } from '@/hooks/useCardStorage'
 import { colors } from '@/colors'
 import { cn } from '@/utils/cn'
+import { nanoid } from 'nanoid'
 
 export const Controls = () => {
-    const { createNewCard } = useContext(CardContext)
+    const { saveToLocalStorage } = useCardStorage('cards')
 
     return (
         <>
@@ -18,7 +16,7 @@ export const Controls = () => {
                             color.button
                         )} border-none rounded-md w-8 hover:w-9 h-8 hover:h-9 transition-all cursor-pointer`}
                         onClick={() => {
-                            createNewCard({
+                            saveToLocalStorage({
                                 id: nanoid(),
                                 body: '',
                                 position: {

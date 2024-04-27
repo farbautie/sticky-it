@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, SetStateAction, useState } from 'react'
 
 export interface CardData {
     id: string
@@ -16,14 +16,13 @@ export interface CardData {
 
 export const CardContext = createContext<{
     cards: CardData[]
-    createNewCard: (cardData: CardData) => void
-    onDeleteCard: (cardId: string) => void
+    setCards: React.Dispatch<React.SetStateAction<CardData[]>>
 }>({
     cards: [],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    createNewCard: (_cardData: CardData) => {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onDeleteCard: (_cardId: string) => {},
+    setCards: function (_value: SetStateAction<CardData[]>): void {
+        throw new Error('Function not implemented.')
+    },
 })
 
 export const CardProvider = ({
@@ -33,32 +32,11 @@ export const CardProvider = ({
 }) => {
     const [cards, setCards] = useState<CardData[]>([])
 
-    useEffect(() => {
-        const existingCardsString = localStorage.getItem('cards')
-        if (existingCardsString) {
-            const existingCards = JSON.parse(existingCardsString)
-            setCards(existingCards)
-        }
-    }, [])
-
-    const createNewCard = (cardData: CardData) => {
-        const updatedCards = [...cards, cardData]
-        setCards(updatedCards)
-        localStorage.setItem('cards', JSON.stringify(updatedCards))
-    }
-
-    const onDeleteCard = (cardId: string) => {
-        const updatedCards = cards.filter((card) => card.id !== cardId)
-        setCards(updatedCards)
-        localStorage.setItem('cards', JSON.stringify(updatedCards))
-    }
-
     return (
         <CardContext.Provider
             value={{
                 cards,
-                createNewCard,
-                onDeleteCard,
+                setCards,
             }}
         >
             {children}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { useCardStorage } from '@/hooks/useCardStorage'
+import { useDragger } from '@/hooks/useDragger'
 import { CardData } from '@/context/CardContext'
 import { cn } from '@/utils/cn'
 
@@ -8,6 +9,9 @@ export default function Card({ id, colors, position }: CardData) {
     const [textValue, setTextValue] = useState<string>('')
     const { cards, removeFromLocalStorage, updateInLocalStorage } =
         useCardStorage('cards')
+
+    const { targetRef } = useDragger()
+
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const [currentCard, setCurrentCard] = useState<CardData>()
 
@@ -41,6 +45,8 @@ export default function Card({ id, colors, position }: CardData) {
     return (
         <div
             className="absolute w-72 cursor-pointer"
+            ref={targetRef}
+            id={id}
             style={{
                 left: position.x + 'px',
                 top: position.y + 'px',
@@ -80,6 +86,8 @@ export default function Card({ id, colors, position }: CardData) {
                         value={textValue}
                         onInput={onTextareaInput}
                         onChange={onTextareaChange}
+                        onMouseUp={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
                     />
                 </div>
             </div>

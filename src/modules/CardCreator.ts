@@ -11,7 +11,7 @@ export function createCardElement(color: IColors): void {
     if (!container) throw new Error('No container element found for card element')
 
     const cardElement = document.createElement('card-element')
-    container.appendChild(cardElement)
+    container.insertAdjacentElement('beforeend', cardElement)
 
     const cardContainer = cardElement.shadowRoot!.querySelector<HTMLElement>('.card-container')!
 

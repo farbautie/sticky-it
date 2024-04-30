@@ -1,5 +1,7 @@
+import { nanoid } from 'nanoid'
 import { colors } from '../colors'
-import { createCardElement } from '../modules/CardCreator'
+import { createCardElement } from '../modules/cardCreator'
+import { addCardToLocalStorage } from '../modules/storage'
 
 class ControlBar extends HTMLElement {
     static name = 'control-bar'
@@ -49,12 +51,29 @@ class ControlBar extends HTMLElement {
         const controlsContainer = document.createElement('div')
         controlsContainer.classList.add('controls')
 
+        const { innerWidth, innerHeight } = window
+        const cardWidth = 300
+        const cardHeight = 200
+
+        const left = (innerWidth - cardWidth) / 2
+        const top = (innerHeight - cardHeight) / 2
+
         colors.forEach((color) => {
             const button = document.createElement('button')
             button.classList.add('control-button')
             button.style.backgroundColor = color.button
             button.onclick = () => {
-                createCardElement(color)
+                const cardData = {
+                    id: nanoid(),
+                    body: '',
+                    colors: { ...color },
+                    position: {
+                        left,
+                        top,
+                    },
+                }
+                createCardElement(cardData)
+                addCardToLocalStorage(cardData)
             }
             controlsContainer.appendChild(button)
         })

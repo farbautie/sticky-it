@@ -1,3 +1,5 @@
+import { updateCardData } from '../modules/storage'
+
 class CardElement extends HTMLElement {
     static name = 'card-element'
 
@@ -70,6 +72,11 @@ class CardElement extends HTMLElement {
     onMouseUp(): void {
         this.isDragging = false
         document.removeEventListener('mousemove', this.onMouseMove.bind(this))
+
+        updateCardData({
+            id: this.cardContainer!.dataset.id as string,
+            position: { left: this.cardContainer!.offsetLeft, top: this.cardContainer!.offsetTop },
+        })
     }
 
     onMouseMove(event: MouseEvent): void {

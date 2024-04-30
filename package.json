@@ -1,7 +1,7 @@
 {
     "name": "sticky-app",
     "private": true,
-    "version": "0.5.1",
+    "version": "0.6.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -11,5 +11,8 @@
     "devDependencies": {
         "typescript": "^5.2.2",
         "vite": "^5.2.0"
+    },
+    "dependencies": {
+        "nanoid": "^5.0.7"
     }
 }

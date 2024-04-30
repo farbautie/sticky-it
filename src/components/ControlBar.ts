@@ -8,11 +8,11 @@ class ControlBar extends HTMLElement {
         this.attachShadow({ mode: 'open' })
     }
 
-    connectedCallback() {
+    connectedCallback(): void {
         this.render()
     }
 
-    static get styles() {
+    static get styles(): string {
         return /* css */ `
             .controls {
                 bottom: 1rem;
@@ -45,7 +45,7 @@ class ControlBar extends HTMLElement {
           `
     }
 
-    render() {
+    render(): void {
         const controlsContainer = document.createElement('div')
         controlsContainer.classList.add('controls')
 

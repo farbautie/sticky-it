@@ -23,41 +23,41 @@ class CardElement extends HTMLElement {
     static get styles(): string {
         return /* css */ `
             .card-container {
-            width: 18rem;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute; /* Make the card draggable */
+                width: 18rem;
+                border-radius: 5px;
+                cursor: grab;
+                position: absolute; /* Make the card draggable */
             }
         
             .card-header {
-            background-color: #9bd1de;
-            height: 1.7rem;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            border-radius: 5px 5px 0 0;
+                background-color: #9bd1de;
+                height: 1.7rem;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                border-radius: 5px 5px 0 0;
             }
         
             .card-body {
-            padding: 1rem .5rem;
-            background-color: #a6dce9;
-            border-radius: 0 0 5px 5px;
+                padding: 1rem .5rem;
+                background-color: #a6dce9;
+                border-radius: 0 0 5px 5px;
             }
         
             .card-body textarea {
-            background-color: inherit;
-            border: none;
-            width: 100%;
-            height: 100%;
-            resize: none;
-            font-size: 16px;
+                background-color: inherit;
+                border: none;
+                width: 100%;
+                height: 100%;
+                resize: none;
+                font-size: 16px;
             }
         
             .card-body textarea:focus {
-            background-color: inherit;
-            outline: none;
-            width: 100%;
-            height: 100%;
+                background-color: inherit;
+                outline: none;
+                width: 100%;
+                height: 100%;
             }
       `
     }

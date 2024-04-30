@@ -1,0 +1,10 @@
+.container {
+    z-index: -2;
+    position: absolute;
+    background-color: #000000;
+    background-image: radial-gradient(#ffffff33 1px, #00000d 1px);
+    background-size: 20px 20px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}

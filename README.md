@@ -1,6 +1,6 @@
 # Sticky-it
 
-Open source sticky notes application using React
+Open source sticky notes application using web components
 
 <img src="./assets/demo.gif">
 

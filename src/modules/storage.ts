@@ -6,7 +6,7 @@ export function addCardToLocalStorage(cardData: Card): void {
     localStorage.setItem('cards', JSON.stringify(existingCards))
 }
 
-export function updateCardData(updatedData: {
+export function updateCardFromLocalStorage(updatedData: {
     id: string
     body?: string
     position?: { top: number; left: number }
@@ -35,5 +35,14 @@ export function loadCardsFromLocalStorage(createCardElement: (cardData: Card) =>
         existingCards.forEach((card) => {
             createCardElement(card)
         })
+    }
+}
+
+export function deleteCardsFromLocalStorage(cardId: string): void {
+    const cardsInStorage = localStorage.getItem('cards')
+    if (cardsInStorage) {
+        const existingCards: Card[] = JSON.parse(cardsInStorage)
+        const updatedCards = existingCards.filter((card) => card.id !== cardId)
+        localStorage.setItem('cards', JSON.stringify(updatedCards))
     }
 }
